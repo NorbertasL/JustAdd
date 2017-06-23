@@ -1,12 +1,35 @@
 <!--Fragment that will display a list of recipes in a recycle view -->
-<ListView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_list_view"
     tools:context="com.example.red_spark.justadd.ui.fragments.MainRecipeListFragment">
 
+    <!--Recycle view for recepie list-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_recipe_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+    <!--Error Text View -->
+    <TextView
+        android:id="@+id/error_message_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error_loading_list"
+        android:visibility="invisible"
+
+        />
+    <!--Loading circle-->
+    <ProgressBar
+        android:id="@+id/loading_indicator"
+        android:layout_width="@dimen/progress_bar_width"
+        android:layout_height="@dimen/progress_bar_height"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+
+        />
 
 
-</ListView>
+</FrameLayout>

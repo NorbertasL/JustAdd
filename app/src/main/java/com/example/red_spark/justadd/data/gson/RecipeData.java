@@ -17,14 +17,14 @@ make getters/setters for them
 public class RecipeData{
     public String id;
     public String name;
-    List<Ingredients> ingredients = new ArrayList<>();
-    class Ingredients {
+    public List<Ingredients> ingredients = new ArrayList<>();
+    public class Ingredients {
         public String quantity;
         public String measure;
         public String ingredient;
     }
     List<Steps> steps = new ArrayList<>();
-    class Steps {
+    public class Steps {
         public String id;
         public String shortDescription;
         public String description;

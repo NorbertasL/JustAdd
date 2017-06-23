@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Progress Bar-->
+    <dimen name="progress_bar_width">50dp</dimen>
+    <dimen name="progress_bar_height">@dimen/progress_bar_width</dimen>
+
+</resources>
