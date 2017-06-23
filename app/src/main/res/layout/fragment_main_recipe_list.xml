@@ -1,12 +1,12 @@
 <!--Fragment that will display a list of recipes in a recycle view -->
-<TextView
+<ListView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:text="@string/hello_blank_fragment"
+    android:id="@+id/fragment_list_view"
     tools:context="com.example.red_spark.justadd.ui.fragments.MainRecipeListFragment">
 
 
 
-</TextView>
+</ListView>
