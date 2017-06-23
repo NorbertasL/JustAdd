@@ -6,6 +6,8 @@ ButterKnife - Reducing boilerplate Android code. http://jakewharton.github.io/bu
 Exoplayer - Display videos. https://google.github.io/ExoPlayer/ <br/>
 Glide - Image dowloading. https://github.com/bumptech/glide <br/>
 Espresso - Android integration testing(UI). https://github.com/codepath/android_guides/wiki/UI-Testing-with-Espresso <br/>
-Retrofit - Text request fron web. http://square.github.io/retrofit/
+Retrofit - Text request fron web. http://square.github.io/retrofit/ <br/>
+GSON - For formasting Json text into java objects.Using a built in vesion from Retrofit.<br/>
+GSON - Stand alone version link https://github.com/google/gson
  
 
