@@ -39,6 +39,7 @@ public class MainRecipeListFragment extends Fragment
         implements MainRecipeListFragmentAdapter.AdapterOnClickHandler{
 
     private RecyclerView.LayoutManager layoutManager;
+    private MainRecipeListFragmentAdapter adapter;
 
     //Used by butterknife to set views to null
     private Unbinder unbinder;
@@ -67,48 +68,12 @@ public class MainRecipeListFragment extends Fragment
         recyclerView.setHasFixedSize(true);
 
         //Creating the adapter
-        final MainRecipeListFragmentAdapter adapter =  new MainRecipeListFragmentAdapter(this);
+        adapter =  new MainRecipeListFragmentAdapter(this);
 
         //binding adapter to recyclerView
         recyclerView.setAdapter(adapter);
 
-        //Creating retrofit builder instance
-        Retrofit.Builder builder =  new Retrofit.Builder()
-                //adding a base url that will be quarried
-                .baseUrl(Constants.BASE_URL)
-                //specifying what converter we will use
-                //since we are getting data in json format well use GSON
-                .addConverterFactory(GsonConverterFactory.create());
 
-        //Creating the actual retrofit object
-        Retrofit retrofit = builder.build();
-
-        //Instance of the retrofit interface
-        GetRecipeInterface inter = retrofit.create(GetRecipeInterface.class);
-
-        //Calling the action on the interface(we only have one and it's a @GET request)
-        //We also specify the variables of the url
-        Call<List<RecipeData>> call = inter.recipeList(Constants.URL_YEAR, Constants.URL_MONTH);
-
-        //executing the request asynchronously
-        call.enqueue(new Callback<List<RecipeData>>() {
-
-            //this is called if the request is successful
-            @Override
-            public void onResponse(Call<List<RecipeData>> call, Response<List<RecipeData>> response) {
-                List<RecipeData> recipeData = response.body();
-                //sending data to the adapter;
-                adapter.setRecipeData(recipeData);
-
-            }
-
-            //this is called if the request failed(no internet connection)
-            @Override
-            public void onFailure(Call<List<RecipeData>> call, Throwable t) {
-                //TODO handle the error properly
-                Toast.makeText(getActivity(), "UPS Error!", Toast.LENGTH_SHORT).show();
-            }
-        });
 
 
 
@@ -126,5 +91,8 @@ public class MainRecipeListFragment extends Fragment
     @Override
     public void onClick(RecipeData recipeData) {
         Toast.makeText(getActivity(), "Clicked on"+recipeData.name, Toast.LENGTH_SHORT).show();
+    }
+    public void setRecipeData(List<RecipeData> recipeData){
+        adapter.setRecipeData(recipeData);
     }
 }
