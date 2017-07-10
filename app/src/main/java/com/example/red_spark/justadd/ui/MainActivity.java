@@ -9,9 +9,14 @@ import android.widget.Toast;
 import com.example.red_spark.justadd.R;
 import com.example.red_spark.justadd.data.Constants;
 import com.example.red_spark.justadd.data.GetRecipeInterface;
+import com.example.red_spark.justadd.data.gson.JsonConverter;
 import com.example.red_spark.justadd.data.gson.RecipeData;
 import com.example.red_spark.justadd.ui.fragments.MainRecipeListFragment;
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,16 +32,23 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private ArrayList<RecipeData> recipeData;
 
+    //using JSON conversion instead of parcelable to reduce complexity
+    private Gson mGson;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mGson =  new Gson();
+
 
         //checking for save instance state
         if(savedInstanceState != null){
             //retrieving the json objects
-            recipeData = savedInstanceState.getParcelableArrayList(LIST_KEY);
+
+            ArrayList<String> jsonString =  savedInstanceState.getStringArrayList(LIST_KEY);
+            recipeData = JsonConverter.jsonStringToObjects(jsonString, mGson);
 
             //retrieving the fragment, you have to type cast it
            // listFragment =  (MainRecipeListFragment)fragmentManager.getFragment(savedInstanceState, LIST_FRAGMENT_KEY);
@@ -99,8 +111,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //saving the list of object that represent the json
-        outState.putParcelableArrayList(LIST_KEY, recipeData);
+        ArrayList<String> jsonString = JsonConverter.classToJsonStrings(recipeData, mGson);
+
+        outState.putStringArrayList(LIST_KEY, jsonString);
 
         //saving the fragment
         //fragmentManager.putFragment(outState, LIST_FRAGMENT_KEY, listFragment);

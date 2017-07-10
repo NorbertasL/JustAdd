@@ -33,7 +33,9 @@ public class MainRecipeListFragmentAdapter
 
     //used to keep track of what sub-view we have expanded
     private List<View> lastExpandedViews = new ArrayList<>();
-    private View curretExpandedView;
+    private View currentExpandedView;
+
+
 
     Context context;
 
@@ -82,59 +84,58 @@ public class MainRecipeListFragmentAdapter
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            if(curretExpandedView == v){
+            if(currentExpandedView == v){
                 //clicked on a expanded view so we open up a new activity with all the data
                 clickHandler.onClick(recipeData.get(adapterPosition));
             }else{
                 expandView(v, recipeData.get(adapterPosition));
+
             }
 
 
+        }
+        public void expandView(View v,RecipeData data){
+            //we get the reference to the view that need to be shown
+            ImageView img = (ImageView) v.findViewById(R.id.iv_thumbnail);
+            TextView servings = (TextView) v.findViewById(R.id.recipe_list_item_servings);
+            //check of we have expanded anything before
+            if(!lastExpandedViews.isEmpty()) {
+                //if so we remove them
+                for(View view : lastExpandedViews){
+                    view.setVisibility(View.GONE);
+                }
+                //we also clean the list
+                lastExpandedViews.clear();
+            }
+            String imgURL = data.image;
+            //checking if we have an image url
+            //if url is empty, we just use a spot-holder image
+            if(imgURL.isEmpty()){
+                img.setImageResource(R.drawable.no_image);
+            }else{
+                //Using Glide to handle the image downloading
+                Glide.with(context).load(imgURL).into(img);
+            }
+            //have to use getResources() because we need the actual string and not just a ref to it.
+            servings.setText(context.getResources().getString(R.string.servings_count)+data.servings);
+
+            //we add all the views into the list to keep track of them for next time
+            lastExpandedViews.add(img);
+            lastExpandedViews.add(servings);
+            //make the views visible
+            for (View view: lastExpandedViews){
+                view.setVisibility(View.VISIBLE);
+            }
+
+            //we keep track on the view so we know when we clicked on it again
+            currentExpandedView = v;
         }
     }
     public void setRecipeData(List<RecipeData> recipeData) {
         this.recipeData = recipeData;
         notifyDataSetChanged();
     }
-    public void expandView(View v,RecipeData data){
-        //we get the reference to the view that need to be shown
-        ImageView img = (ImageView) v.findViewById(R.id.iv_thumbnail);
-        TextView servings = (TextView) v.findViewById(R.id.recipe_list_item_servings);
-        //check of we have expanded anything before
-        if(!lastExpandedViews.isEmpty()) {
-            //if so we remove them
-            for(View view : lastExpandedViews){
-                view.setVisibility(View.GONE);
-            }
-            //we also clean the list
-            lastExpandedViews.clear();
-        }
-        String imgURL = data.image;
-        //checking if we have an image url
-        //if url is empty, we just use a spot-holder image
-        if(imgURL.isEmpty()){
-            img.setImageResource(R.drawable.no_image);
-        }else{
-            //Using Glide to handle the image downloading
-            //TODO this image was for a test, check the json for actual image link
-            Glide.with(context).load("http://goo.gl/gEgYUd").into(img);
 
 
-
-        }
-        //have to use getResources() because we need the actual string and not just a ref to it.
-        servings.setText(context.getResources().getString(R.string.servings_count)+data.servings);
-
-        //we add all the views into the list to keep track of them for next time
-        lastExpandedViews.add(img);
-        lastExpandedViews.add(servings);
-        //make the views visible
-        for (View view: lastExpandedViews){
-            view.setVisibility(View.VISIBLE);
-        }
-
-        //we keep track on the view so we know when we clicked on it again
-        curretExpandedView = v;
-    }
 
 }

@@ -11,11 +11,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.red_spark.justadd.R;
+import com.example.red_spark.justadd.data.Constants;
+import com.example.red_spark.justadd.data.gson.JsonConverter;
 import com.example.red_spark.justadd.ui.MainActivity;
-import com.example.red_spark.justadd.ui.RecipeDetailActivity;
+import com.example.red_spark.justadd.ui.RecipeStepsActivity;
 import com.example.red_spark.justadd.ui.adapters.MainRecipeListFragmentAdapter;
 import com.example.red_spark.justadd.data.gson.RecipeData;
+import com.google.gson.Gson;
+
 import android.support.v7.widget.RecyclerView;
+
 
 import java.util.ArrayList;
 
@@ -23,7 +28,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
 /**
  * This fragment will display a list of recipes in a recycle view
  * Using butterknife to reduce boilerplate code;
@@ -40,6 +44,11 @@ public class MainRecipeListFragment extends Fragment
     private RecyclerView.LayoutManager layoutManager;
     private MainRecipeListFragmentAdapter adapter;
 
+    private Gson mGson;
+
+
+
+
     //Used by butterknife to set views to null
     private Unbinder unbinder;
 
@@ -51,7 +60,7 @@ public class MainRecipeListFragment extends Fragment
 
     // Required empty public constructor
     public MainRecipeListFragment() {
-
+        mGson = new Gson();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,8 +72,9 @@ public class MainRecipeListFragment extends Fragment
 
         layoutManager = new LinearLayoutManager(getActivity());
 
-        if(savedInstanceState != null)
+        if(savedInstanceState != null) {
             layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(LAYOUT_KEY));
+        }
 
 
 
@@ -79,12 +89,15 @@ public class MainRecipeListFragment extends Fragment
         recyclerView.setAdapter(adapter);
 
 
+
+
         //this retrieves the data from the main activity is it is store there
         //used for restoring instance states
         ArrayList<RecipeData> mRecipeData = ((MainActivity)getActivity()).getData();
         if(mRecipeData != null && mRecipeData.size()>0){
             setRecipeData(mRecipeData);
         }
+
 
 
         //returning main/root view
@@ -94,7 +107,9 @@ public class MainRecipeListFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        //saving the layout manager state
         outState.putParcelable(LAYOUT_KEY, layoutManager.onSaveInstanceState());
+
     }
 
     @Override
@@ -110,9 +125,17 @@ public class MainRecipeListFragment extends Fragment
     public void onClick(RecipeData recipeData) {
         //Toast.makeText(getActivity(), "Clicked on"+recipeData.name, Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(getActivity(), RecipeDetailActivity.class));
+        String jsonString = JsonConverter.classToJsonString(recipeData, mGson);
+
+        startActivity(new Intent(getActivity(), RecipeStepsActivity.class)
+                .putExtra(Constants.RECIPE_DATA_BUNDLE_KEY, jsonString));
     }
+
+
     public void setRecipeData(ArrayList<RecipeData> recipeData){
         adapter.setRecipeData(recipeData);
     }
+
+
 }
+
