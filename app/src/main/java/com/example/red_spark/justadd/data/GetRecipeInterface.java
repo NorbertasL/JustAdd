@@ -2,7 +2,7 @@ package com.example.red_spark.justadd.data;
 
 import com.example.red_spark.justadd.data.gson.RecipeData;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -23,6 +23,6 @@ public interface GetRecipeInterface {
      * and in later android version it will crash the app
     */
     @GET("/topher/{year}/{month}/59121517_baking/baking.json")
-    Call<List<RecipeData>> recipeList(@Path("year")String year, @Path("month") String month);
+    Call<ArrayList<RecipeData>> recipeList(@Path("year")String year, @Path("month") String month);
 
 }

@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_rowSpan="2">
+    <ImageView
+        android:id="@+id/iv_thumbnail"
+        android:maxHeight="@dimen/image_view_list_thumbnail"
+        android:visibility="gone"
+        android:adjustViewBounds="true"/>
+    <LinearLayout
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_list_item_name"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_list_item_servings"
+            android:visibility="gone"
 
-<TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/recipe_list_item"/>
+            />
+
+    </LinearLayout>
+
+<!--use gone to make it not render at all, takes up no space-->
+</GridLayout>
+
+

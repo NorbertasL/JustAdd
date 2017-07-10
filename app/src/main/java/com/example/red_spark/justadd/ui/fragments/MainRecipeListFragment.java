@@ -1,5 +1,6 @@
 package com.example.red_spark.justadd.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,25 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.red_spark.justadd.R;
-import com.example.red_spark.justadd.data.Constants;
-import com.example.red_spark.justadd.data.GetRecipeInterface;
+import com.example.red_spark.justadd.ui.MainActivity;
+import com.example.red_spark.justadd.ui.RecipeDetailActivity;
 import com.example.red_spark.justadd.ui.adapters.MainRecipeListFragmentAdapter;
 import com.example.red_spark.justadd.data.gson.RecipeData;
 import android.support.v7.widget.RecyclerView;
 
-import java.util.List;
+import java.util.ArrayList;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * This fragment will display a list of recipes in a recycle view
@@ -37,6 +33,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainRecipeListFragment extends Fragment
         implements MainRecipeListFragmentAdapter.AdapterOnClickHandler{
+
+    //instance save keys
+    private final static String LAYOUT_KEY = "layout_key";
 
     private RecyclerView.LayoutManager layoutManager;
     private MainRecipeListFragmentAdapter adapter;
@@ -62,8 +61,14 @@ public class MainRecipeListFragment extends Fragment
         //butterknife set up
         unbinder = ButterKnife.bind(this, rootView);
 
-
         layoutManager = new LinearLayoutManager(getActivity());
+
+        if(savedInstanceState != null)
+            layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(LAYOUT_KEY));
+
+
+
+
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
@@ -74,7 +79,12 @@ public class MainRecipeListFragment extends Fragment
         recyclerView.setAdapter(adapter);
 
 
-
+        //this retrieves the data from the main activity is it is store there
+        //used for restoring instance states
+        ArrayList<RecipeData> mRecipeData = ((MainActivity)getActivity()).getData();
+        if(mRecipeData != null && mRecipeData.size()>0){
+            setRecipeData(mRecipeData);
+        }
 
 
         //returning main/root view
@@ -82,17 +92,27 @@ public class MainRecipeListFragment extends Fragment
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(LAYOUT_KEY, layoutManager.onSaveInstanceState());
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         //setting the view to null, we have to do it for fragments.
         unbinder.unbind();
+
     }
+
 
     @Override
     public void onClick(RecipeData recipeData) {
-        Toast.makeText(getActivity(), "Clicked on"+recipeData.name, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Clicked on"+recipeData.name, Toast.LENGTH_SHORT).show();
+
+        startActivity(new Intent(getActivity(), RecipeDetailActivity.class));
     }
-    public void setRecipeData(List<RecipeData> recipeData){
+    public void setRecipeData(ArrayList<RecipeData> recipeData){
         adapter.setRecipeData(recipeData);
     }
 }

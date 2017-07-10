@@ -3,5 +3,7 @@
     <!--Progress Bar-->
     <dimen name="progress_bar_width">50dp</dimen>
     <dimen name="progress_bar_height">@dimen/progress_bar_width</dimen>
+    
+    <dimen name="image_view_list_thumbnail">70dp</dimen>
 
 </resources>
