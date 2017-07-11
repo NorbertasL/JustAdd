@@ -40,6 +40,18 @@ public class JsonConverter {
         return object;
     }
 
+    public static RecipeData.Ingredients jsonIngToObject(String jsonString, Gson gsonObject){
+        return gsonObject.fromJson(jsonString, RecipeData.Ingredients.class);
+    }
+
+    public static ArrayList<RecipeData.Ingredients> jsonIngToObjects(ArrayList<String> jsonString, Gson gsonObject){
+        ArrayList<RecipeData.Ingredients> object = new ArrayList<>();
+        for(String string: jsonString){
+            object.add(jsonIngToObject(string, gsonObject));
+        }
+        return object;
+    }
+
 
 
 

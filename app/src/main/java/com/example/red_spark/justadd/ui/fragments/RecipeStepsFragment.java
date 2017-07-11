@@ -2,6 +2,7 @@ package com.example.red_spark.justadd.ui.fragments;
 
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import com.example.red_spark.justadd.R;
 import com.example.red_spark.justadd.data.Constants;
 import com.example.red_spark.justadd.data.gson.JsonConverter;
 import com.example.red_spark.justadd.data.gson.RecipeData;
+import com.example.red_spark.justadd.ui.StepDetailActivity;
 import com.example.red_spark.justadd.ui.adapters.RecipeStepsAdapter;
 import com.google.gson.Gson;
 
@@ -90,8 +92,28 @@ public class RecipeStepsFragment extends Fragment
 
     @Override
     public void onClick(int index) {
-    //TODO handle clicking on the step, i need to open an activity with the details on the step
-        Toast.makeText(getActivity(), "Clicked on"+ stepList.get(index), Toast.LENGTH_SHORT).show();
+        Gson gson = new Gson();
+
+        //index of = means it is the ingredient list
+        if(index == 0){
+           ArrayList<String> jsonString = new ArrayList<>();
+            //converting the object into a json
+            for(RecipeData.Ingredients ingredient: mRecipeData.ingredients){
+                jsonString.add(JsonConverter.classToJsonString(ingredient, gson));
+            }
+            //starts a new activity and passing in the jason data
+            startActivity(new Intent(getActivity(), StepDetailActivity.class)
+                    .putExtra(Constants.RECIPE_INGREDIANT_KEY, jsonString));
+
+        }else{
+            String jsonString;
+            //converting object into jason string
+            //do index -1 to align the indexing
+            //remember index 0 was ingredients
+            jsonString = JsonConverter.classToJsonString(mRecipeData.steps.get(index -1), gson);
+            startActivity(new Intent(getActivity(), StepDetailActivity.class)
+                    .putExtra(Constants.RECIPE_STEP_KEY, jsonString));
+        }
     }
 
 
