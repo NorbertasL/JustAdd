@@ -19,12 +19,16 @@ import com.example.red_spark.justadd.data.gson.RecipeData;
 import com.example.red_spark.justadd.ui.adapters.RecipeStepsAdapter;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment that contains the list of all the steps
+ * and other information
  */
 public class RecipeStepsFragment extends Fragment
         implements RecipeStepsAdapter.AdapterOnClickHandler {
@@ -32,6 +36,8 @@ public class RecipeStepsFragment extends Fragment
     private RecyclerView.LayoutManager layoutManager;
     private RecipeStepsAdapter adapter;
     private RecipeData mRecipeData;
+
+    List<String> stepList;
 
     //Used by butterknife to set views to null
     private Unbinder unbinder;
@@ -55,11 +61,17 @@ public class RecipeStepsFragment extends Fragment
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
+        //Retrieve the RecipeData class jason that we passed in as a argument from the activity
         String jsonStrings = getArguments().getString(Constants.RECIPE_DATA_BUNDLE_KEY);
 
+        //converting the jason back into a class
         mRecipeData = JsonConverter.jsonStringToObject(jsonStrings, new Gson());
-        //Creating adapater and passing in a list of steps
-        adapter = new RecipeStepsAdapter(this, mRecipeData.steps);
+
+        //creating a list of steps that will be displayed
+        stepList = makeStepList(mRecipeData);
+
+        //passing in the steps into the adapter
+        adapter = new RecipeStepsAdapter(this, stepList);
 
         //binding adapter to recyclerView
         recyclerView.setAdapter(adapter);
@@ -77,8 +89,27 @@ public class RecipeStepsFragment extends Fragment
     }
 
     @Override
-    public void onClick(RecipeData.Steps step) {
-    //TODO handle clicking
-        Toast.makeText(getActivity(), "Clicked on"+step.shortDescription, Toast.LENGTH_SHORT).show();
+    public void onClick(int index) {
+    //TODO handle clicking on the step, i need to open an activity with the details on the step
+        Toast.makeText(getActivity(), "Clicked on"+ stepList.get(index), Toast.LENGTH_SHORT).show();
+    }
+
+
+    //Method to generate a list
+    public List<String> makeStepList(RecipeData data){
+        List<String> stepString = new ArrayList<>();
+
+        //first step is always the ingredients
+        //have to use getResources() because we need the actual string and not just a ref to it.
+        stepString.add(getResources().getString(R.string.ingredients));
+
+
+        //convert the rest of the steps into strings
+        for (RecipeData.Steps step: data.steps){
+            stepString.add(step.shortDescription);
+        }
+
+        return stepString;
+
     }
 }

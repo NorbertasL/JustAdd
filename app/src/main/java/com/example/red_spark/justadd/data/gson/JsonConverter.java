@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Red_Spark on 10-Jul-17.
+ * Util class used for converting to and from json
  */
 
 public class JsonConverter {

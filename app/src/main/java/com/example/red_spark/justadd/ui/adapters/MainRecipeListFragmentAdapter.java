@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * Created by Red_Spark on 23-Jun-17.
- * Adapter for the recycle view
+ * Adapter for the recycle view used in MainRecipeListFragment
  *
  */
 
@@ -28,7 +28,7 @@ public class MainRecipeListFragmentAdapter
 
     private AdapterOnClickHandler clickHandler;
 
-    //stores all the recepie objects
+    //stores all the Recipe objects
     private List<RecipeData> recipeData;
 
     //used to keep track of what sub-view we have expanded

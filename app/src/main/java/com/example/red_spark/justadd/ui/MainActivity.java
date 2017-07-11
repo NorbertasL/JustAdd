@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import com.example.red_spark.justadd.R;
 import com.example.red_spark.justadd.data.Constants;
 import com.example.red_spark.justadd.data.GetRecipeInterface;
@@ -13,10 +12,7 @@ import com.example.red_spark.justadd.data.gson.JsonConverter;
 import com.example.red_spark.justadd.data.gson.RecipeData;
 import com.example.red_spark.justadd.ui.fragments.MainRecipeListFragment;
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
     //instance save keys
     private final static String LIST_KEY =  "list_key";
-   // private final static String LIST_FRAGMENT_KEY = "list_fragment_key";
+
 
     private MainRecipeListFragment listFragment;
     private FragmentManager fragmentManager;
@@ -40,18 +36,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //used for the conversion of classes into jason strings
         mGson =  new Gson();
 
 
         //checking for save instance state
         if(savedInstanceState != null){
             //retrieving the json objects
-
             ArrayList<String> jsonString =  savedInstanceState.getStringArrayList(LIST_KEY);
+
+            //converting the json into a class
             recipeData = JsonConverter.jsonStringToObjects(jsonString, mGson);
 
-            //retrieving the fragment, you have to type cast it
-           // listFragment =  (MainRecipeListFragment)fragmentManager.getFragment(savedInstanceState, LIST_FRAGMENT_KEY);
 
         }else{
             //Creating an instance of a Fragment Manager
@@ -111,12 +107,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        //saving the Data as a json array list instead of parcelable object
+        //reduces complexity and chance of errors
         ArrayList<String> jsonString = JsonConverter.classToJsonStrings(recipeData, mGson);
 
         outState.putStringArrayList(LIST_KEY, jsonString);
-
-        //saving the fragment
-        //fragmentManager.putFragment(outState, LIST_FRAGMENT_KEY, listFragment);
 
 
     }

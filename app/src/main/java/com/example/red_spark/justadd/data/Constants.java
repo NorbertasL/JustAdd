@@ -12,4 +12,7 @@ public class Constants {
 
     public final static String RECIPE_DATA_BUNDLE_KEY = "recipe_data_bundle_key";
 
+    public final static String RECIPE_STEP_KEY = "recipe_step_key";
+    public final static String RECIPE_INGREDIANT_KEY = "recipe_ingredient_key";
+
 }

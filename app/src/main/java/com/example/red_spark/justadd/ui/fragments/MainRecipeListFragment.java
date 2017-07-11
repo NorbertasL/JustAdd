@@ -44,10 +44,6 @@ public class MainRecipeListFragment extends Fragment
     private RecyclerView.LayoutManager layoutManager;
     private MainRecipeListFragmentAdapter adapter;
 
-    private Gson mGson;
-
-
-
 
     //Used by butterknife to set views to null
     private Unbinder unbinder;
@@ -60,7 +56,7 @@ public class MainRecipeListFragment extends Fragment
 
     // Required empty public constructor
     public MainRecipeListFragment() {
-        mGson = new Gson();
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +68,8 @@ public class MainRecipeListFragment extends Fragment
 
         layoutManager = new LinearLayoutManager(getActivity());
 
+
+        //restores the state of the layoutManager
         if(savedInstanceState != null) {
             layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(LAYOUT_KEY));
         }
@@ -123,10 +121,12 @@ public class MainRecipeListFragment extends Fragment
 
     @Override
     public void onClick(RecipeData recipeData) {
-        //Toast.makeText(getActivity(), "Clicked on"+recipeData.name, Toast.LENGTH_SHORT).show();
 
-        String jsonString = JsonConverter.classToJsonString(recipeData, mGson);
 
+        //conver the RecipeData class into a json so we can pass it in as a intent
+        String jsonString = JsonConverter.classToJsonString(recipeData, new Gson());
+
+        //start the new activit and pass in the intent with the required data
         startActivity(new Intent(getActivity(), RecipeStepsActivity.class)
                 .putExtra(Constants.RECIPE_DATA_BUNDLE_KEY, jsonString));
     }

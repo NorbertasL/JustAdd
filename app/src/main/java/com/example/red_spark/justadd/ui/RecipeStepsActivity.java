@@ -19,7 +19,6 @@ import java.util.List;
 
 public class RecipeStepsActivity extends AppCompatActivity {
 
-    private RecipeData mRecipeData;
     private RecipeStepsFragment mStepsFragment;
     private FragmentManager mFragmentManager;
 
@@ -27,24 +26,28 @@ public class RecipeStepsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String jsonString;
         super.onCreate(savedInstanceState);
+
+        String jsonString;
         setContentView(R.layout.activity_recipe_steps);
 
         mGson = new Gson();
 
+
+        //geting intent data
         Intent parentActivity = getIntent();
         if (parentActivity != null) {
             if (parentActivity.hasExtra(Constants.RECIPE_DATA_BUNDLE_KEY)) {
-                //TODO ingrediasnt retun null(it was not in the main activity i chjecked.
+                //getting the json string
                 jsonString = parentActivity.getStringExtra(Constants.RECIPE_DATA_BUNDLE_KEY);
 
-                mRecipeData = JsonConverter.jsonStringToObject(jsonString, mGson);
-
+                //putting the json into a bundle
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.RECIPE_DATA_BUNDLE_KEY, jsonString);
                 mFragmentManager = getSupportFragmentManager();
                 mStepsFragment = new RecipeStepsFragment();
+
+                //passing the json data into the fragment as a argument
                 mStepsFragment.setArguments(bundle);
 
                 //Fragment transaction
