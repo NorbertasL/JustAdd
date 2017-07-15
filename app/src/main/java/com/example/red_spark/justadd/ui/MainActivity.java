@@ -20,36 +20,17 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-    //instance save keys
-    private final static String LIST_KEY =  "list_key";
-
 
     private MainRecipeListFragment listFragment;
     private FragmentManager fragmentManager;
-    private ArrayList<RecipeData> recipeData;
-
-    //using JSON conversion instead of parcelable to reduce complexity
-    private Gson mGson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //used for the conversion of classes into jason strings
-        mGson =  new Gson();
-
-
         //checking for save instance state
-        if(savedInstanceState != null){
-            //retrieving the json objects
-            ArrayList<String> jsonString =  savedInstanceState.getStringArrayList(LIST_KEY);
-
-            //converting the json into a class
-            recipeData = JsonConverter.jsonStringToObjects(jsonString, mGson);
-
-
-        }else{
+        if(savedInstanceState == null){
             //Creating an instance of a Fragment Manager
             //Fragment Manager lets you add/remove/update fragment in the activity
             fragmentManager = getSupportFragmentManager();
@@ -86,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
                 //this is called if the request is successful
                 @Override
                 public void onResponse(Call<ArrayList<RecipeData>> call, Response<ArrayList<RecipeData>> response) {
-                    recipeData = response.body();
+                    //recipeData = response.body()
                     //sending data to the adapter;
-                    listFragment.setRecipeData(recipeData);
+                    listFragment.setRecipeData(response.body());
 
                 }
 
@@ -100,22 +81,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
-
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //saving the Data as a json array list instead of parcelable object
-        //reduces complexity and chance of errors
-        ArrayList<String> jsonString = JsonConverter.classToJsonStrings(recipeData, mGson);
-
-        outState.putStringArrayList(LIST_KEY, jsonString);
-
-
-    }
-    public ArrayList<RecipeData> getData(){
-        return recipeData;
     }
 }

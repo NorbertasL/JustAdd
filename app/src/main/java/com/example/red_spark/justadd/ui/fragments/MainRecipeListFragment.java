@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,11 +39,15 @@ import butterknife.Unbinder;
 public class MainRecipeListFragment extends Fragment
         implements MainRecipeListFragmentAdapter.AdapterOnClickHandler{
 
+    private static final String TAG = MainRecipeListFragment.class.getSimpleName();
+
     //instance save keys
     private final static String LAYOUT_KEY = "layout_key";
+    private final static String DATA_KEY = "data_key";
 
     private RecyclerView.LayoutManager layoutManager;
     private MainRecipeListFragmentAdapter adapter;
+    private ArrayList<RecipeData> mRecipeData;
 
 
     //Used by butterknife to set views to null
@@ -65,13 +70,25 @@ public class MainRecipeListFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_main_recipe_list, container, false);
         //butterknife set up
         unbinder = ButterKnife.bind(this, rootView);
-
         layoutManager = new LinearLayoutManager(getActivity());
+        //Creating the adapter
+        adapter =  new MainRecipeListFragmentAdapter(this);
 
 
         //restores the state of the layoutManager
         if(savedInstanceState != null) {
+
+            //Converting the ArrayList<String> into ArrayList<Object> and storing in in mRecipeData
+            mRecipeData = JsonConverter
+                    .jsonStringToObjects(savedInstanceState.getStringArrayList(DATA_KEY)
+                            , new Gson());
+
+            //retrieving the layoutManager that was saved
             layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(LAYOUT_KEY));
+
+            //setting the data to the adapter
+            adapter.setRecipeData(mRecipeData);
+
         }
 
 
@@ -80,23 +97,8 @@ public class MainRecipeListFragment extends Fragment
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-        //Creating the adapter
-        adapter =  new MainRecipeListFragmentAdapter(this);
-
         //binding adapter to recyclerView
         recyclerView.setAdapter(adapter);
-
-
-
-
-        //this retrieves the data from the main activity is it is store there
-        //used for restoring instance states
-        ArrayList<RecipeData> mRecipeData = ((MainActivity)getActivity()).getData();
-        if(mRecipeData != null && mRecipeData.size()>0){
-            setRecipeData(mRecipeData);
-        }
-
-
 
         //returning main/root view
         return rootView;
@@ -107,6 +109,11 @@ public class MainRecipeListFragment extends Fragment
         super.onSaveInstanceState(outState);
         //saving the layout manager state
         outState.putParcelable(LAYOUT_KEY, layoutManager.onSaveInstanceState());
+
+        //converting the ArrayList<Object> into ArrayList<String> and saving it in outState
+        outState.putStringArrayList(DATA_KEY, JsonConverter.classToJsonStrings(mRecipeData, new Gson()));
+
+
 
     }
 
@@ -133,7 +140,8 @@ public class MainRecipeListFragment extends Fragment
 
 
     public void setRecipeData(ArrayList<RecipeData> recipeData){
-        adapter.setRecipeData(recipeData);
+        mRecipeData = recipeData;
+        adapter.setRecipeData(mRecipeData);
     }
 
 

@@ -74,7 +74,26 @@ public class StepDetailFragment extends Fragment {
 
 
         }else if(getArguments().containsKey(Constants.RECIPE_STEP_KEY)) {
-            //TODO
+            //will not use the list view since that's used for the ingeriants
+            ingredientListView.setVisibility(View.GONE);
+
+            String temp = getArguments().getString(Constants.RECIPE_STEP_KEY);
+
+            RecipeData.Steps step = JsonConverter.jsonIntoStepObject(temp, new Gson());
+
+            //checking if there is a video url
+            if(!step.videoURL.isEmpty()){
+                //TODO check if url is valid, ending in .mp4
+                videoView.setText(step.videoURL);
+            }else{
+                videoView.setVisibility(View.GONE);
+            }
+            //chaking if there is a discription of the step
+            if(!step.description.isEmpty()){
+                discTextView.setText(step.description);
+            }
+
+
         }else {
             //TODO error here
         }

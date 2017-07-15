@@ -52,6 +52,10 @@ public class JsonConverter {
         return object;
     }
 
+    public static RecipeData.Steps jsonIntoStepObject(String jsonString, Gson gsonObject){
+        return gsonObject.fromJson(jsonString, RecipeData.Steps.class);
+    }
+
 
 
 
