@@ -22,8 +22,6 @@ public class RecipeStepsActivity extends AppCompatActivity {
     private RecipeStepsFragment mStepsFragment;
     private FragmentManager mFragmentManager;
 
-    private Gson mGson;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,12 +29,9 @@ public class RecipeStepsActivity extends AppCompatActivity {
         String jsonString;
         setContentView(R.layout.activity_recipe_steps);
 
-        mGson = new Gson();
-
-
-        //geting intent data
+        //getting intent data
         Intent parentActivity = getIntent();
-        if (parentActivity != null) {
+        if (parentActivity != null && savedInstanceState == null) {
             if (parentActivity.hasExtra(Constants.RECIPE_DATA_BUNDLE_KEY)) {
                 //getting the json string
                 jsonString = parentActivity.getStringExtra(Constants.RECIPE_DATA_BUNDLE_KEY);

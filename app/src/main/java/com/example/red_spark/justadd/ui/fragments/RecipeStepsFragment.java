@@ -35,9 +35,15 @@ import butterknife.Unbinder;
 public class RecipeStepsFragment extends Fragment
         implements RecipeStepsAdapter.AdapterOnClickHandler {
 
+    //instance save keys
+    private final static String LAYOUT_KEY = "layout_key";
+    private final static String DATA_KEY = "data_key";
+
     private RecyclerView.LayoutManager layoutManager;
     private RecipeStepsAdapter adapter;
     private RecipeData mRecipeData;
+
+    String mJsonStrings;
 
     List<String> stepList;
 
@@ -59,15 +65,23 @@ public class RecipeStepsFragment extends Fragment
         unbinder = ButterKnife.bind(this, rootView);
 
         layoutManager = new LinearLayoutManager(getActivity());
-
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-        //Retrieve the RecipeData class jason that we passed in as a argument from the activity
-        String jsonStrings = getArguments().getString(Constants.RECIPE_DATA_BUNDLE_KEY);
+        if(savedInstanceState != null){
+            //retrieving the layoutManager that was saved
+            layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(LAYOUT_KEY));
+
+            //retrieving the saved json string
+            mJsonStrings = savedInstanceState.getString(DATA_KEY);
+
+        }else {
+            //Retrieve the RecipeData class jason that we passed in as a argument from the activity
+            mJsonStrings = getArguments().getString(Constants.RECIPE_DATA_BUNDLE_KEY);
+        }
 
         //converting the jason back into a class
-        mRecipeData = JsonConverter.jsonStringToObject(jsonStrings, new Gson());
+        mRecipeData = JsonConverter.jsonStringToObject(mJsonStrings, new Gson());
 
         //creating a list of steps that will be displayed
         stepList = makeStepList(mRecipeData);
@@ -132,6 +146,16 @@ public class RecipeStepsFragment extends Fragment
         }
 
         return stepString;
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //saving the layout manager state
+        outState.putParcelable(LAYOUT_KEY, layoutManager.onSaveInstanceState());
+        //saving the json string too
+        outState.putString(DATA_KEY, mJsonStrings);
 
     }
 }
