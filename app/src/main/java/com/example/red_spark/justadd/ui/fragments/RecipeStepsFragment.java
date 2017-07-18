@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.red_spark.justadd.R;
 import com.example.red_spark.justadd.data.Constants;
@@ -106,14 +105,12 @@ public class RecipeStepsFragment extends Fragment
 
     @Override
     public void onClick(int index) {
-        Gson gson = new Gson();
-
         //index of = means it is the ingredient list
         if(index == 0){
            ArrayList<String> jsonString = new ArrayList<>();
             //converting the object into a json
             for(RecipeData.Ingredients ingredient: mRecipeData.ingredients){
-                jsonString.add(JsonConverter.classToJsonString(ingredient, gson));
+                jsonString.add(JsonConverter.classToJsonString(ingredient, new Gson()));
             }
             //starts a new activity and passing in the jason data
             startActivity(new Intent(getActivity(), StepDetailActivity.class)
@@ -124,7 +121,7 @@ public class RecipeStepsFragment extends Fragment
             //converting object into jason string
             //do index -1 to align the indexing
             //remember index 0 was ingredients
-            jsonString = JsonConverter.classToJsonString(mRecipeData.steps.get(index -1), gson);
+            jsonString = JsonConverter.classToJsonString(mRecipeData.steps.get(index -1), new Gson());
             startActivity(new Intent(getActivity(), StepDetailActivity.class)
                     .putExtra(Constants.RECIPE_STEP_KEY, jsonString));
         }

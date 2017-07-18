@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.red_spark.justadd.R;
 import com.example.red_spark.justadd.data.Constants;
 import com.example.red_spark.justadd.ui.fragments.StepDetailFragment;
-import java.util.ArrayList;
 
 
 /**
@@ -15,21 +14,20 @@ import java.util.ArrayList;
  */
 
 public class StepDetailActivity extends AppCompatActivity {
+
     private StepDetailFragment mStepDetailFragment;
     private FragmentManager mFragmentManager;
 
-    private ArrayList<String> stringList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String mJsonString;
 
         setContentView(R.layout.activity_step_detail);
         Intent parentActivity = getIntent();
         //passing on the data as a bundle to the fragment
-        if (parentActivity != null) {
+        if (parentActivity != null && savedInstanceState == null) {
             Bundle bundle = new Bundle();
             if(parentActivity.hasExtra(Constants.RECIPE_INGREDIANT_KEY)){
                 bundle.putStringArrayList(Constants.RECIPE_INGREDIANT_KEY,
