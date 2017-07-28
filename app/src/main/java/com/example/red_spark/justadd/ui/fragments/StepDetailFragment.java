@@ -68,7 +68,8 @@ public class StepDetailFragment extends Fragment {
         //butterknife
         unbinder = ButterKnife.bind(this, rootView);
 
-        if(true){
+        //if getArguments() == null that means we are on a big screen
+        if(getArguments() == null){
             videoView.setVisibility(View.GONE);
 
             //TODO move the string
