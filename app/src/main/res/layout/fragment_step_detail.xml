@@ -13,8 +13,9 @@
         android:id="@+id/error_message_display"/>
 
     <ListView
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:id="@+id/ingredient_list_view">
     </ListView>
 
@@ -27,5 +28,32 @@
         android:layout_height="wrap_content"
         android:id="@+id/disc_text_view"
         />
+
+    <LinearLayout
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:gravity="center"
+            android:text="@string/bt_previous"
+            android:id="@+id/bt_previous"
+            android:layout_width="100dp"
+            android:layout_height="50dp" />
+
+        <!--This view is just so the next button aligns to the right, i feel its better than using
+        2 LL inside this layout-->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+        <Button
+            android:gravity="center"
+            android:text="@string/bt_next"
+            android:id="@+id/bt_next"
+            android:layout_width="100dp"
+            android:layout_height="50dp" />
+    </LinearLayout>
 
 </LinearLayout>

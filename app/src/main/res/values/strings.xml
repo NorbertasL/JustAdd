@@ -9,5 +9,9 @@
 
     <string name="ingredients">Ingredient list</string>
 
+    <!-- Buttons -->
+    <string name="bt_previous">Previous</string>
+    <string name="bt_next">Next</string>
+
 
 </resources>
