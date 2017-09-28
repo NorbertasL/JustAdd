@@ -2,7 +2,8 @@ package com.example.red_spark.justadd.ui.fragments;
 
 
 
-import android.content.Intent;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +17,6 @@ import com.example.red_spark.justadd.R;
 import com.example.red_spark.justadd.data.Constants;
 import com.example.red_spark.justadd.data.gson.JsonConverter;
 import com.example.red_spark.justadd.data.gson.RecipeData;
-import com.example.red_spark.justadd.ui.StepDetailActivity;
 import com.example.red_spark.justadd.ui.adapters.RecipeStepsAdapter;
 import com.google.gson.Gson;
 
@@ -33,6 +33,9 @@ import butterknife.Unbinder;
  */
 public class RecipeStepsFragment extends Fragment
         implements RecipeStepsAdapter.AdapterOnClickHandler {
+
+
+
 
     //instance save keys
     private final static String LAYOUT_KEY = "layout_key";
@@ -54,6 +57,23 @@ public class RecipeStepsFragment extends Fragment
     TextView textView;
 
 
+    //interface used to talk with the activity
+    OnRecipeItemSelectedListener mCallback;
+    public interface OnRecipeItemSelectedListener{
+        void onItemSelected(String jsonString);
+        void onItemSelected(ArrayList<String> jsonString);
+    }
+    //Making sure the interface id implemented
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        if(context instanceof OnRecipeItemSelectedListener){
+            mCallback = (OnRecipeItemSelectedListener) context;
+        }else{
+            throw new RuntimeException(context.toString()
+                    + "must implement OnRecipeItemSelectedListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +93,6 @@ public class RecipeStepsFragment extends Fragment
 
             //retrieving the saved json string
             mJsonStrings = savedInstanceState.getString(DATA_KEY);
-
         }else {
             //Retrieve the RecipeData class jason that we passed in as a argument from the activity
             mJsonStrings = getArguments().getString(Constants.RECIPE_DATA_BUNDLE_KEY);
@@ -112,9 +131,9 @@ public class RecipeStepsFragment extends Fragment
             for(RecipeData.Ingredients ingredient: mRecipeData.ingredients){
                 jsonString.add(JsonConverter.classToJsonString(ingredient, new Gson()));
             }
-            //starts a new activity and passing in the jason data
-            startActivity(new Intent(getActivity(), StepDetailActivity.class)
-                    .putExtra(Constants.RECIPE_INGREDIANT_KEY, jsonString));
+
+            mCallback.onItemSelected(jsonString);
+
 
         }else{
             String jsonString;
@@ -122,8 +141,9 @@ public class RecipeStepsFragment extends Fragment
             //do index -1 to align the indexing
             //remember index 0 was ingredients
             jsonString = JsonConverter.classToJsonString(mRecipeData.steps.get(index -1), new Gson());
-            startActivity(new Intent(getActivity(), StepDetailActivity.class)
-                    .putExtra(Constants.RECIPE_STEP_KEY, jsonString));
+
+            mCallback.onItemSelected(jsonString);
+
         }
     }
 

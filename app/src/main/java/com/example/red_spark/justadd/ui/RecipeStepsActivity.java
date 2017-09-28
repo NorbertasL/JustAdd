@@ -18,7 +18,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeStepsActivity extends AppCompatActivity {
+public class RecipeStepsActivity extends AppCompatActivity implements RecipeStepsFragment.OnRecipeItemSelectedListener {
 
     private RecipeStepsFragment mStepsFragment;
     private StepDetailFragment mStepDetailFragment;
@@ -87,5 +87,38 @@ public class RecipeStepsActivity extends AppCompatActivity {
 
 
 
+    }
+
+    //Makes a fragment for step
+    @Override
+    public void onItemSelected(String jsonString) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.RECIPE_STEP_KEY, jsonString);
+        startFragment(bundle);
+    }
+
+    //Makes fragment for ingredients
+    @Override
+    public void onItemSelected(ArrayList<String> jsonString) {
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList(Constants.RECIPE_INGREDIANT_KEY, jsonString);
+        startFragment(bundle);
+
+    }
+    private void startFragment(Bundle bundle){
+        mStepDetailFragment = new StepDetailFragment();
+        mStepDetailFragment.setArguments(bundle);
+
+        mFragmentManager.beginTransaction()
+                .replace(R.id.steps_container, mStepDetailFragment)
+                .commit();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        mFragmentManager.beginTransaction()
+                .replace(R.id.steps_container, mStepsFragment)
+                .commit();
     }
 }
